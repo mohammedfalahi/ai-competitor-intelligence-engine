@@ -1,0 +1,147 @@
+{
+  "name": "Error Handler - run_log",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ed568224-339e-4728-992e-e2b950a98767",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const e = $json;\nconst name = e.workflow?.name || '';\nconst phase = /phase\\s*2/i.test(name) ? 2 : /phase\\s*1/i.test(name) ? 1 : '';\nreturn [{ json: {\n  run_id: 'p' + (phase || 'x') + '_' + (e.execution?.id || ''),\n  phase,\n  run_at: new Date().toISOString(),\n  status: 'failed',\n  failed_node: e.execution?.lastNodeExecuted || '',\n  error_message: String(e.execution?.error?.message || '').slice(0, 500),\n  execution_url: e.execution?.url || ''\n} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "2eac1720-67ce-4617-99aa-b0d24d408187",
+      "name": "Build Failed Row"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1XBCDZJBfj5LA3QFLwvznzqRZEERhzRICXqN54ePM1h8",
+          "mode": "list",
+          "cachedResultName": "Competitor Monitor",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XBCDZJBfj5LA3QFLwvznzqRZEERhzRICXqN54ePM1h8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 291125840,
+          "mode": "list",
+          "cachedResultName": "run_log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XBCDZJBfj5LA3QFLwvznzqRZEERhzRICXqN54ePM1h8/edit#gid=291125840"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "failed_node": "={{ $json.failed_node }}",
+            "error_message": "={{ $json.error_message }}",
+            "execution_url": "={{ $json.execution_url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "failed_node",
+              "displayName": "failed_node",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_url",
+              "displayName": "execution_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        0
+      ],
+      "id": "18fe1930-0156-4648-8e99-1e77224c07bb",
+      "name": "run_log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "rkXfUzBwZNKhdZdb",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Build Failed Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Failed Row": {
+      "main": [
+        [
+          {
+            "node": "run_log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "run_log": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "abc8525b-a732-4680-abfb-3293ebd2b2f1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3ad034c99633e01e09f4aaea2e5946b80d36dbb45f994964698ed811ec41512e"
+  },
+  "nodeGroups": [],
+  "id": "7oSqBOq2i5yJrSPw",
+  "tags": []
+}
